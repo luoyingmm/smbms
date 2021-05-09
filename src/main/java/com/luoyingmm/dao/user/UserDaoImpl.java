@@ -2,6 +2,7 @@ package com.luoyingmm.dao.user;
 
 import com.luoyingmm.dao.BaseDao;
 import com.luoyingmm.pojo.User;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,4 +47,30 @@ public class UserDaoImpl implements UserDao{
 
 
     }
+
+    @Override
+    public int updatePwd(Connection connection, int id, String password) throws SQLException {
+        PreparedStatement pstm = null;
+        int execute = 0;
+        if (connection != null) {
+            Object[] params = {password,id};
+            String sql = "UPDATE `smbms_user` SET `userPassword`=? WHERE `id`=? ";
+            execute = BaseDao.execute(connection, pstm, sql, params);
+
+        }
+        BaseDao.closeResource(null, pstm, null);
+        return execute;
+    }
+
+    public static void main(String[] args) {
+        Connection connection = null;
+        connection = BaseDao.getconnection();
+        UserDaoImpl userDao = new UserDaoImpl();
+        try {
+            int i = userDao.updatePwd(connection, 1, "1234567");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
 }
