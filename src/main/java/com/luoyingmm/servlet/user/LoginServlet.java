@@ -23,7 +23,7 @@ public class LoginServlet extends HttpServlet {
 
         UserService userService = new UserServiceImpl();
         User user = userService.login(username, password);
-        if (user != null){
+        if (user != null && password.equals(user.getUserPassword())){
             req.getSession().setAttribute(Constants.USER_SESSION,user);
             resp.sendRedirect("jsp/frame.jsp");
         }else {

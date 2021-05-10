@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 public class UserServiceImpl implements UserService{
     private UserDao userDao;
@@ -59,10 +60,42 @@ public class UserServiceImpl implements UserService{
 
     }
 
+    @Override
+    public int getUserCount(String username, int userRole) {
+        Connection connection = null;
+        int count = 0;
+        try {
+            connection = BaseDao.getconnection();
+             count = userDao.getUserCount(connection, username, userRole);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            BaseDao.closeResource(connection,null,null);
+        }
+        return count;
+    }
+
+    @Override
+    public List<User> getUserList(String queryUserName, int queryUserRole, int currentPageNo, int pageSize) {
+        Connection connection = null;
+        List<User> userList = null;
+        try {
+             connection = BaseDao.getconnection();
+            userList   = userDao.getUserList(connection, queryUserName, queryUserRole, currentPageNo, pageSize);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            BaseDao.closeResource(connection,null,null);
+        }
+        return userList;
+
+    }
+
     @Test
     public void test(){
         UserServiceImpl userService = new UserServiceImpl();
-        User admin = userService.login("wen", "12423432");
-        System.out.println(admin.getUserPassword());
+        int userCount = userService.getUserCount(null, 0);
+        System.out.println(userCount);
+
     }
 }
